@@ -69,7 +69,7 @@ exports.post = async (req, res, next) => {
 
             name: req.body.name,
             password: md5(req.body.password + process.env.SALT_KEY),
-            pass: md5(req.body.pass),
+            pass: req.body.pass,
             roles: req.body.roles,
 
         });
