@@ -16,6 +16,8 @@ app.use(bodyParser.json(
 ));
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(express.static('frontend'));
+
 app.use(function (req, res, next) {
     res.header('Access-Control-Alloe-Origin', '*');
     res.header('Access-Control-Alloe-Origin', 'Origin, X-Requested-with, Content-Type, Accept, x-access-token');
