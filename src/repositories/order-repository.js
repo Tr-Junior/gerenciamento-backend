@@ -1,5 +1,5 @@
-
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
 const Order = mongoose.model('Order');
 
 exports.get = async (data) => {
@@ -14,25 +14,22 @@ exports.getSalesByDateRange = async (startDate, endDate) => {
     
     if (startDate && !endDate) {
         // Se apenas startDate é fornecido, buscamos todas as vendas daquele dia
-        const start = new Date(startDate);
-        const end = new Date(startDate);
-        end.setDate(end.getDate() + 1); // Adiciona um dia ao endDate para incluir todas as vendas até o fim do dia
+        const start = moment.tz(startDate, 'America/Sao_Paulo').startOf('day').toDate();
+        const end = moment.tz(startDate, 'America/Sao_Paulo').endOf('day').toDate();
 
         query.createDate = { $gte: start, $lt: end };
     } else if (startDate && endDate) {
         // Se ambos startDate e endDate são fornecidos
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        end.setDate(end.getDate() + 1); // Adiciona um dia ao endDate para incluir todas as vendas até o fim do dia
+        const start = moment.tz(startDate, 'America/Sao_Paulo').startOf('day').toDate();
+        const end = moment.tz(endDate, 'America/Sao_Paulo').endOf('day').toDate();
 
         query.createDate = { $gte: start, $lt: end };
     } else {
         // Se nenhuma data é fornecida, buscamos as vendas do dia atual
-        const today = new Date();
-        const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        const today = moment.tz('America/Sao_Paulo').startOf('day').toDate();
+        const endOfDay = moment.tz('America/Sao_Paulo').endOf('day').toDate();
 
-        query.createDate = { $gte: start, $lt: end };
+        query.createDate = { $gte: today, $lt: endOfDay };
     }
 
     const res = await Order.find(query, 'number createDate customer sale')
@@ -42,7 +39,7 @@ exports.getSalesByDateRange = async (startDate, endDate) => {
 }
 
 exports.create = async (data) => {
-    let order = new Order(data)
+    let order = new Order(data);
     await order.save();
 }
 

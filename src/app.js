@@ -5,10 +5,10 @@ const mongoose = require('mongoose')
 const router = express.Router();
 const cors = require('cors');
 require("dotenv").config();
-
+const moment = require('moment-timezone');
 
 mongoose.connect(process.env.MONGO_URL);
-
+moment.tz.setDefault('America/Sao_Paulo');
 app.use(cors());
 
 app.use(bodyParser.json(
