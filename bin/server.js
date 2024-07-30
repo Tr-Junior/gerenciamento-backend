@@ -1,5 +1,5 @@
 'use strict'
-
+const moment = require('moment-timezone');
 const http = require('http');
 const debug = require('debug')('nodestr:server');
 const app = require('../src/app');
@@ -58,3 +58,6 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+const currentDateInBrazil = moment().tz('America/Sao_Paulo').format('YYYY-MM-DD HH:mm:ss');
+
+console.log(`Data e hora no Brasil: ${currentDateInBrazil}`);
