@@ -58,10 +58,3 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
-
-
-// Definindo o fuso horário padrão para o Brasil
-moment.tz.setDefault('America/Sao_Paulo');
-const currentDateInBrazil = moment().tz('America/Sao_Paulo').format('YYYY-MM-DD HH:mm:ss');
-
-console.log(`Data e hora no Brasil: ${currentDateInBrazil}`);
