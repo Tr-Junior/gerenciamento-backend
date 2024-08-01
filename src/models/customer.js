@@ -12,10 +12,10 @@ const schema = new Schema({
         type: String,
         required: true,
     },
-    pass: {
-        type: String,
-        required: true,
-    },
+    // pass: {
+    //     type: String,
+    //     required: true,
+    // },
     roles: [{
         type: String,
         enum: ['user', 'admin'],
