@@ -12,6 +12,10 @@ const schema = new Schema({
         type: String,
         required: true
     },
+    client:{
+        type: String,
+        trim: true
+    },
     sale: {
         items: [{
             product: {

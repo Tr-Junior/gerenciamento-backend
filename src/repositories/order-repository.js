@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Order = mongoose.model('Order');
 
 exports.get = async (data) => {
-    let res = await Order.find({}, 'number createDate customer sale')
+    let res = await Order.find({}, 'number createDate customer sale client')
         .populate('customer', 'name')
         .populate('sale');
     return res;
@@ -35,7 +35,7 @@ exports.getSalesByDateRange = async (startDate, endDate) => {
         query.createDate = { $gte: start, $lt: end };
     }
 
-    const res = await Order.find(query, 'number createDate customer sale')
+    const res = await Order.find(query, 'number createDate customer sale client')
         .populate('customer', 'name')
         .populate('sale');
     return res;

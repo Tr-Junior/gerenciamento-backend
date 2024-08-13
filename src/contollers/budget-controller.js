@@ -9,17 +9,18 @@ const Product = require('../models/product');
 const Budget = require('../models/budget');
 
 
-
 exports.get = async (req, res, next) => {
     try {
-        var data = await repository.get();
+        const data = await repository.get();
         res.status(200).send(data);
     } catch (e) {
+        console.error('Erro ao obter dados:', e.message); // Log de erro detalhado
         res.status(500).send({
-            message: 'falha ao processar a requisição'
+            message: 'Não foi possível obter os dados. Por favor, tente novamente mais tarde.' // Mensagem amigável
         });
     }
-}
+};
+
 
 
 exports.post = async (req, res, next) => {
@@ -67,27 +68,34 @@ exports.post = async (req, res, next) => {
             });
         }
     } catch (e) {
+        console.error('Erro ao processar orçamento:', e.message); // Log de erro detalhado
         res.status(500).send({
-            message: 'Falha ao processar a requisição'
+            message: 'Não foi possível processar o orçamento. Por favor, tente novamente mais tarde.' // Mensagem amigável
         });
     }
 };
-
 
 
 
 exports.delete = async (req, res, next) => {
     try {
+        const budget = await Budget.findById(req.params.id);
+
+        if (!budget) {
+            return res.status(404).send({ message: 'Orçamento não encontrado.' }); // Mensagem amigável para orçamento não encontrado
+        }
+
         await Budget.findByIdAndDelete(req.params.id);
 
         res.status(200).send({
-            message: 'Orçamento Deletado!'
+            message: 'Orçamento deletado com sucesso.' // Mensagem de sucesso
         });
     } catch (e) {
-        console.log(e);
+        console.error('Erro ao deletar orçamento:', e.message); // Log de erro detalhado
         res.status(500).send({
-            message: 'Falha ao processar a requisição'
+            message: 'Não foi possível deletar o orçamento. Por favor, tente novamente mais tarde.' // Mensagem amigável
         });
     }
 };
+
 
