@@ -1,4 +1,3 @@
-
 const ValidationContract = require('../validators/validators');
 const repository = require('../repositories/customer-repository');
 const md5 = require('md5');
@@ -58,8 +57,6 @@ exports.post = async (req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.name, 3, 'O nome deve ser pelo menos 3 caracteres');
     contract.hasMinLen(req.body.password, 6, 'A senha deve ser pelo menos 6 caracteres');
-    contract.hasMinLen(req.body.pass, 6, 'A senha deve ser pelo menos 6 caracteres');
-
     if (!contract.isValid()) {
         res.status(400).send(contract.errors()).end();
         return;
@@ -69,7 +66,6 @@ exports.post = async (req, res, next) => {
 
             name: req.body.name,
             password: md5(req.body.password + process.env.SALT_KEY),
-            pass: req.body.pass,
             roles: req.body.roles,
 
         });
@@ -109,7 +105,6 @@ exports.authenticate = async (req, res, next) => {
             user: {
                 _id: user._id,
                 name: user.name,
-                pass: user.pass,
                 roles: user.roles
             }
         });
@@ -145,7 +140,6 @@ exports.refreshToken = async (req, res, next) => {
             user: {
                 _id: user._id,
                 name: user.name,
-                pass: user.pass,
                 roles: user.roles
             }
         });

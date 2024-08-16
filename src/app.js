@@ -6,15 +6,15 @@ const router = express.Router();
 const cors = require('cors');
 require("dotenv").config();
 
-
 mongoose.connect(process.env.MONGO_URL);
-
 app.use(cors());
 
 app.use(bodyParser.json(
     { limit: '5mb' }
 ));
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(express.static('frontend'));
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Alloe-Origin', '*');

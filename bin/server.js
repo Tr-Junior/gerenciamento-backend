@@ -1,5 +1,5 @@
 'use strict'
-
+const moment = require('moment-timezone');
 const http = require('http');
 const debug = require('debug')('nodestr:server');
 const app = require('../src/app');

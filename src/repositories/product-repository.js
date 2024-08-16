@@ -24,10 +24,24 @@ exports.getById = async (id) => {
 }
 
 exports.getByTitle = async (title) => {
-    const res = await Product
-        .find({ title: { $regex: title, $options: 'i' } }
-        ).limit(25);
-    return res;
+    const regex = new RegExp(`^${title}`, 'i');
+    const containsRegex = new RegExp(title, 'i');
+    
+    // Buscar os produtos que começam com o título
+    const startsWith = await Product.find({ title: regex }).limit(25).exec();
+    
+    // Se a quantidade de resultados ainda é menor que 25, buscar os produtos que contêm o título
+    if (startsWith.length < 25) {
+        const excludeIds = startsWith.map(product => product._id);
+        const contains = await Product.find({ 
+            title: containsRegex, 
+            _id: { $nin: excludeIds } 
+        }).limit(25 - startsWith.length).exec();
+        
+        return [...startsWith, ...contains];
+    }
+    
+    return startsWith;
 };
 
 

@@ -42,10 +42,11 @@ exports.post = async (req, res, next) => {
         const number = guid.raw().substring(0, 6);
 
         await repository.create({
-
             customer: data._id,
             number: number,
+            client: req.body.client,
             sale: req.body.sale
+            
         });
 
         await entrance.create(
