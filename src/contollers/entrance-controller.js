@@ -21,39 +21,26 @@ exports.get = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
     try {
-        const product = await repository.delete(req.params.id);
-        if (!product) {
-            return res.status(404).send({
-                message: 'Produto não encontrado.' // Mensagem amigável caso o produto não exista
-            });
-        }
+        await repository.delete(req.params.id)
         res.status(200).send({
-            message: 'Produto removido com sucesso!' // Mensagem de sucesso
+            message: 'Produto removido!'
         });
     } catch (e) {
-        console.error('Erro ao remover produto:', e.message); // Log detalhado do erro
         res.status(500).send({
-            message: 'Não foi possível remover o produto. Tente novamente mais tarde.' // Mensagem amigável
+            message: 'Falha ao processar a requisição'
         });
     }
-};
-
+}
 
 exports.deleteByCode = async (req, res, next) => {
     try {
-        const product = await repository.deleteByCode(req.params.code);
-        if (!product) {
-            return res.status(404).send({
-                message: 'Produto não encontrado.' // Mensagem amigável caso o produto não exista
-            });
-        }
+        await repository.deleteByCode(req.params.code)
         res.status(200).send({
-            message: 'Produto removido com sucesso!' // Mensagem de sucesso
+            message: 'Produto removido!'
         });
     } catch (e) {
-        console.error('Erro ao remover produto por código:', e.message); // Log detalhado do erro
         res.status(500).send({
-            message: 'Não foi possível remover o produto. Tente novamente mais tarde.' // Mensagem amigável
+            message: 'Falha ao processar a requisição'
         });
     }
-};
+}

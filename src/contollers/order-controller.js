@@ -114,13 +114,13 @@ exports.delete = async (req, res, next) => {
         const order = await Order.findById(req.params.id).populate('sale.items.product');
 
         if (!order) {
-            return res.status(404).send({ message: 'Venda não encontrada.' }); // Mensagem amigável para venda não encontrada
+            return res.status(404).send({ message: 'Venda não encontrada' });
         }
 
         // Percorre os itens da venda e incrementa a quantidade no estoque
         for (const item of order.sale.items) {
             const productId = item.product.id;
-            const quantity = +item.quantity;
+            const quantity = + item.quantity;
 
             await Product.findByIdAndUpdate(productId, { $inc: { quantity: quantity } });
         }
@@ -128,23 +128,22 @@ exports.delete = async (req, res, next) => {
         await Order.findByIdAndDelete(req.params.id);
 
         res.status(200).send({
-            message: 'Venda deletada com sucesso.' // Mensagem de sucesso
+            message: 'Venda Deletada!'
         });
     } catch (e) {
-        console.error('Erro ao deletar venda:', e.message); // Log de erro detalhado
+        console.log(e);
         res.status(500).send({
-            message: 'Não foi possível deletar a venda. Por favor, tente novamente mais tarde.' // Mensagem amigável
+            message: 'Falha ao processar a requisição'
         });
     }
 };
-
 
 exports.deleteByCode = async (req, res, next) => {
     try {
         const order = await Order.findOne({ number: req.params.code }).populate('sale.items.product');
 
         if (!order) {
-            return res.status(404).send({ message: 'Venda não encontrada.' }); // Mensagem amigável para venda não encontrada
+            return res.status(404).send({ message: 'Venda não encontrada' });
         }
 
         // Percorre os itens da venda e incrementa a quantidade no estoque
@@ -158,12 +157,12 @@ exports.deleteByCode = async (req, res, next) => {
         await Order.findOneAndDelete({ number: req.params.code });
 
         res.status(200).send({
-            message: 'Venda deletada com sucesso.' // Mensagem de sucesso
+            message: 'Venda Deletada!'
         });
     } catch (e) {
-        console.error('Erro ao deletar venda por código:', e.message); // Log de erro detalhado
+        console.log(e);
         res.status(500).send({
-            message: 'Não foi possível deletar a venda. Por favor, tente novamente mais tarde.' // Mensagem amigável
+            message: 'Falha ao processar a requisição'
         });
     }
 };
