@@ -12,101 +12,68 @@ const Order = require('../models/order');
 
 exports.get = async (req, res, next) => {
     try {
-        const data = await repository.get();
+        var data = await repository.get();
         res.status(200).send(data);
     } catch (e) {
-        console.error('Erro ao obter dados:', e.message); // Log de erro detalhado
         res.status(500).send({
-            message: 'Não foi possível obter os dados. Por favor, tente novamente mais tarde.' // Mensagem amigável
+            message: 'falha ao processar a requisição'
         });
     }
-};
-
+}
 
 exports.getSales = async (req, res, next) => {
     try {
-        const { startDate, endDate } = req.query; // Obtém as datas da query string
+        const { startDate, endDate } = req.query; // Obtém as datas do corpo da requisição
         const sales = await repository.getSalesByDateRange(startDate, endDate);
         res.status(200).send(sales);
     } catch (e) {
-        console.error('Erro ao obter vendas por período:', e.message); // Log de erro detalhado
         res.status(500).send({
-            message: 'Não foi possível obter as vendas. Por favor, tente novamente mais tarde.' // Mensagem amigável
+            message: 'Falha ao processar a requisição'
         });
     }
-};
-
+}
 
 exports.post = async (req, res, next) => {
     try {
+
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-        if (!token) {
-            throw new Error('Token ausente');
-        }
-
         const data = await authService.decodeToken(token);
-        if (!data) {
-            throw new Error('Token inválido');
-        }
-
         const number = guid.raw().substring(0, 6);
-        if (!number) {
-            throw new Error('Falha ao gerar número do pedido');
-        }
 
-        try {
-            await repository.create({
-                customer: data._id,
-                number: number,
-                client: req.body.client,
-                sale: req.body.sale
-            });
-        } catch (err) {
-            console.error('Erro ao criar entrada no repositório:', err.message);
-            throw new Error('Não foi possível salvar a venda. Por favor, tente novamente mais tarde.');
-        }
+        await repository.create({
+            customer: data._id,
+            number: number,
+            client: req.body.client,
+            sale: req.body.sale
+            
+        });
 
-        try {
-            await entrance.create({
+        await entrance.create(
+            {
                 numberOfOrder: number,
                 value: req.body.sale.total
-            });
-        } catch (err) {
-            console.error('Erro ao criar entrada na tabela de entradas:', err.message);
-            throw new Error('Não foi possível registrar a entrada da venda. Por favor, tente novamente.');
-        }
-
-        for (const e of req.body.sale.items) {
-            try {
-                const products = await product.getById(e.product);
-                if (!products) {
-                    throw new Error(`Produto não encontrado: ${e.product}`);
-                }
-
-                await product.update(products._id, { 
-                    quantity: products.quantity - e.quantity 
-                });
-            } catch (err) {
-                console.error(`Erro ao atualizar o produto ${e.product}:`, err.message);
-                throw new Error('Não foi possível atualizar o estoque do produto. Por favor, verifique os dados e tente novamente.');
             }
-        }
+        )
+
+        req.body.sale.items.forEach(async (e) => {
+            const products = await product.getById(e.product);
+            product.update(products, {
+                quantity: products.quantity = products.quantity - e.quantity,
+            })
+        });
+
+
 
         res.status(201).send({
             message: 'Venda efetuada com sucesso'
         });
-
-        console.log('Corpo da requisição:', req.body);
-
     } catch (e) {
-        console.error('Erro em exports.post:', e.message); // Log de erro mais detalhado
         res.status(500).send({
-            message: 'Falha ao processar a requisição. Por favor, tente novamente mais tarde.' // Mensagem de erro mais amigável
+            message: 'falha ao processar a requisição'
         });
     }
 };
-
 
 
 exports.delete = async (req, res, next) => {

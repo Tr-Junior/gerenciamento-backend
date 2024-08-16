@@ -8,16 +8,14 @@ const authService = require('../services/auth-service');
 
 exports.get = async (req, res, next) => {
     try {
-        const data = await repository.get();
+        var data = await repository.get();
         res.status(200).send(data);
     } catch (e) {
-        console.error('Erro ao obter dados:', e.message); // Log detalhado do erro
         res.status(500).send({
-            message: 'Não foi possível obter os dados. Tente novamente mais tarde.' // Mensagem amigável
+            message: 'Falha ao processar a requisição'
         });
     }
-};
-
+}
 
 exports.delete = async (req, res, next) => {
     try {
