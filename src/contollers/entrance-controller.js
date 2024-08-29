@@ -41,4 +41,5 @@ exports.deleteByCode = async (req, res, next) => {
             message: 'Falha ao processar a requisição'
         });
     }
+    
 }
