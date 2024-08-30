@@ -14,7 +14,7 @@ app.use(bodyParser.json(
 ));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static('frontend'));
+// app.use(express.static('frontend'));
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Alloe-Origin', '*');
