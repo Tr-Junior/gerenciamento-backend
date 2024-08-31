@@ -46,8 +46,6 @@ exports.create = async (data) => {
     await order.save();
 }
 
-
-
 exports.delete = async (id) => {
     await Order.findByIdAndDelete(id);
 }
