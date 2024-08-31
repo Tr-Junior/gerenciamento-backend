@@ -129,6 +129,8 @@ exports.post = async (req, res, next) => {
 };
 
 
+
+
 exports.delete = async (req, res, next) => {
     try {
         const order = await Order.findById(req.params.id).populate('sale.items.product');
