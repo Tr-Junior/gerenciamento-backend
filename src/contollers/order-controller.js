@@ -45,12 +45,6 @@ exports.post = async (req, res, next) => {
             totalPayments += payment.amount;
         });
 
-        if (totalPayments !== req.body.sale.total) {
-            return res.status(400).send({
-                message: 'A soma das formas de pagamento deve ser igual ao total da venda.'
-            });
-        }
-
         await repository.create({
             customer: data._id,
             number: number,
